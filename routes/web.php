@@ -21,3 +21,13 @@ use App\Http\Controllers\ProductController;
 
 Route::get('add-more', [ProductController::class, 'index']);
 Route::post('add-more', [ProductController::class, 'store'])->name('add-more.store');;
+
+// testing for other method
+Route::get('ptj/create', [PtjController::class, 'createPtj'])->name('createPtj');
+Route::post('ptj/store', [PtjController::class, 'storePtj'])->name('storePtj');
+
+Route::get('bahagian/create/{ptj_id}', [PtjController::class, 'createBahagian'])->name('createBahagian');
+Route::post('bahagian/store/{ptj_id}', [PtjController::class, 'storeBahagian'])->name('storeBahagian');
+
+Route::get('unit/create/{bahagian_id}', [PtjController::class, 'createUnit'])->name('createUnit');
+Route::post('unit/store/{bahagian_id}', [PtjController::class, 'storeUnit'])->name('storeUnit');
