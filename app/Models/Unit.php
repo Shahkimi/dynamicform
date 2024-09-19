@@ -9,6 +9,9 @@ class Unit extends Model
 {
     protected $fillable = ['bahagian_id', 'unit'];
 
+    // Explicitly define the table name
+    protected $table = 'unit';
+
     public function bahagian()
     {
         return $this->belongsTo(Bahagian::class);

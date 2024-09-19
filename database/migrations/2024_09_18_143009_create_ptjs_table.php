@@ -26,7 +26,8 @@ return new class extends Migration
             $table->string("bahagian");
             $table->timestamps();
         });
-Schema::create('unit', function (Blueprint $table) {
+
+        Schema::create('unit', function (Blueprint $table) {
             $table->id();
             $table->bigInteger("bahagian_id");
             $table->string("unit");

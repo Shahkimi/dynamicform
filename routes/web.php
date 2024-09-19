@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PtjController;
 use App\Http\Controllers\ProductController;
 
 /*
