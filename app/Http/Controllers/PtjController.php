@@ -12,53 +12,63 @@ class PtjController extends Controller
     // Step 1: Show form to create PTJ
     public function createPtj()
     {
-        return view('ptj.create'); // Show PTJ creation form
+        return view('ptj.create');
     }
 
     // Step 1: Store PTJ data
     public function storePtj(Request $request)
     {
-        $ptj = Ptj::create($request->all());
+        // Validate incoming request
+        $validated = $request->validate([
+            'nama_ptj' => 'required|string|max:255',
+            'kod_ptj' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'pengarah' => 'required|string|max:255',
+        ]);
 
-        // Redirect to the next step (creating bahagian for this PTJ)
-        return redirect()->route('createBahagian', $ptj->id);
+        // Create PTJ and redirect to create Bahagian
+        $ptj = Ptj::create($validated);
+
+        return redirect()->route('createBahagian', $ptj);
     }
 
     // Step 2: Show form to create Bahagian for a specific PTJ
-    public function createBahagian($ptj_id)
+    public function createBahagian(Ptj $ptj)
     {
-        $ptj = Ptj::find($ptj_id);
-        return view('bahagian.create', compact('ptj')); // Pass PTJ data to the view
+        return view('bahagian.create', compact('ptj'));
     }
 
     // Step 2: Store Bahagian data
-    public function storeBahagian(Request $request, $ptj_id)
+    public function storeBahagian(Request $request, Ptj $ptj)
     {
-        $bahagian = Bahagian::create([
-            'ptj_id' => $ptj_id,
-            'bahagian' => $request->bahagian
+        // Validate incoming request
+        $validated = $request->validate([
+            'bahagian' => 'required|string|max:255',
         ]);
 
-        // Redirect to the next step (creating unit for this Bahagian)
-        return redirect()->route('createUnit', $bahagian->id);
+        // Create Bahagian and redirect to create Unit
+        $bahagian = $ptj->bahagians()->create($validated);
+
+        return redirect()->route('createUnit', $bahagian);
     }
 
     // Step 3: Show form to create Unit for a specific Bahagian
-    public function createUnit($bahagian_id)
+    public function createUnit(Bahagian $bahagian)
     {
-        $bahagian = Bahagian::find($bahagian_id);
-        return view('unit.create', compact('bahagian')); // Pass Bahagian data to the view
+        return view('unit.create', compact('bahagian'));
     }
 
     // Step 3: Store Unit data
-    public function storeUnit(Request $request, $bahagian_id)
+    public function storeUnit(Request $request, Bahagian $bahagian)
     {
-        Unit::create([
-            'bahagian_id' => $bahagian_id,
-            'unit' => $request->unit
+        // Validate incoming request
+        $validated = $request->validate([
+            'unit' => 'required|string|max:255',
         ]);
 
-        // Redirect to a summary or success page
+        // Create Unit and redirect to PTJ index page
+        $bahagian->units()->create($validated);
+
         return redirect()->route('ptj.index');
     }
 }
