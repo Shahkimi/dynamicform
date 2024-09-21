@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PtjController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\ProductController;
 
 /*
@@ -38,4 +39,8 @@ Route::prefix('bahagian/{bahagian}')->group(function () {
     Route::get('unit/create', [PtjController::class, 'createUnit'])->name('createUnit');
     Route::post('unit/store', [PtjController::class, 'storeUnit'])->name('storeUnit');
 });
+
+
+Route::get('/test', [App\Http\Controllers\TestController::class, 'index'])->name('test.index');
+Route::post('/test/store', [App\Http\Controllers\TestController::class, 'store'])->name('test.store');
 
