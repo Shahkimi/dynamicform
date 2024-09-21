@@ -133,7 +133,9 @@
                         method: 'POST',
                         body: new FormData(this),
                         headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
                         }
                     })
                     .then(response => response.json())
@@ -147,6 +149,12 @@
                         alert('An error occurred. Please try again.');
                     });
             });
+
+            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener(
+                'click',
+                function() {
+                    modals[0].show();
+                });
         });
     </script>
 @endpush
