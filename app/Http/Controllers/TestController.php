@@ -24,7 +24,8 @@ class TestController extends Controller
             'alamat' => 'required|string|max:255',
             'pengarah' => 'required|string|max:255',
             'bahagian' => 'required|string|max:255',
-            'unit' => 'required|string|max:255',
+            'units' => 'required|array',
+            'units.*' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -40,14 +41,15 @@ class TestController extends Controller
                 'bahagian' => $request->bahagian,
             ]);
 
-            $bahagian->units()->create([
-                'unit' => $request->unit,
-            ]);
+            foreach ($request->units as $unit) {
+                $bahagian->units()->create([
+                    'unit' => $unit,
+                ]);
+            }
 
             DB::commit();
 
             return response()->json(['message' => 'Data saved successfully!'], 200);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'An error occurred while saving the data.'], 500);

@@ -7,9 +7,11 @@
                 <div class="card">
                     <div class="card-header">Multi-step Form</div>
                     <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#step1Modal">
-                            Start Form
-                        </button>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#step1Modal">
+                                Tambah PTJ
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -18,35 +20,30 @@
 
     <form id="multiStepForm" action="{{ route('test.store') }}" method="POST">
         @csrf
-
         <!-- Step 1: PTJ Modal -->
         <div class="modal fade" id="step1Modal" tabindex="-1" aria-labelledby="step1ModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="step1ModalLabel">Step 1: Hospital (PTJ) Details</h5>
+                        <h5 class="modal-title" id="step1ModalLabel">Step 1: Maklumat PTJ</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group mb-3">
                             <label for="nama_ptj">Hospital Name</label>
-                            <input type="text" class="form-control" name="nama_ptj" required
-                                placeholder="Enter hospital name">
+                            <input type="text" class="form-control" name="nama_ptj" required placeholder="Enter hospital name">
                         </div>
                         <div class="form-group mb-3">
                             <label for="kod_ptj">Hospital Code</label>
-                            <input type="text" class="form-control" name="kod_ptj" required
-                                placeholder="Enter hospital code">
+                            <input type="text" class="form-control" name="kod_ptj" required placeholder="Enter hospital code">
                         </div>
                         <div class="form-group mb-3">
                             <label for="alamat">Address</label>
-                            <input type="text" class="form-control" name="alamat" required
-                                placeholder="Enter hospital address">
+                            <input type="text" class="form-control" name="alamat" required placeholder="Enter hospital address">
                         </div>
                         <div class="form-group mb-3">
                             <label for="pengarah">Director</label>
-                            <input type="text" class="form-control" name="pengarah" required
-                                placeholder="Enter director's name">
+                            <input type="text" class="form-control" name="pengarah" required placeholder="Enter director's name">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -61,19 +58,17 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="step2ModalLabel">Step 2: Section Details</h5>
+                        <h5 class="modal-title" id="step2ModalLabel">Step 2: Maklumat Bahagian</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group mb-3">
-                            <label for="bahagian">Section Name</label>
-                            <input type="text" class="form-control" name="bahagian" required
-                                placeholder="Enter section name">
+                            <label for="bahagian">Bahagian</label>
+                            <input type="text" class="form-control" name="bahagian" required placeholder="Enter section name">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary prev-step"
-                            data-bs-target="#step1Modal">Previous</button>
+                        <button type="button" class="btn btn-secondary prev-step" data-bs-target="#step1Modal">Previous</button>
                         <button type="button" class="btn btn-primary next-step" data-bs-target="#step3Modal">Next</button>
                     </div>
                 </div>
@@ -85,19 +80,36 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="step3ModalLabel">Step 3: Unit Details</h5>
+                        <h5 class="modal-title" id="step3ModalLabel">Step 3: Maklumat Unit</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group mb-3">
-                            <label for="unit">Unit Name</label>
-                            <input type="text" class="form-control" name="unit" required
-                                placeholder="Enter unit name">
+                        <div class="text-end">
+                            <button type="button" class="btn btn-primary btn-sm mt-2" id="addUnit">
+                                <i class="fa fa-plus"></i> Add More Unit
+                            </button>
                         </div>
+                        <div class="form-group mb-3">
+                            <label for="unit">Unit</label>
+                        </div>
+                        <div id="unitContainer">
+                            <div class="unit-entry">
+                                <div class="row align-items-center">
+                                    <div class="col-10">
+                                        <input type="text" name="units[]" class="form-control" placeholder="Enter unit name" required><br>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-danger btn-sm remove-unit">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary prev-step"
-                            data-bs-target="#step2Modal">Previous</button>
+                        <button type="button" class="btn btn-secondary prev-step" data-bs-target="#step2Modal">Previous</button>
                         <button type="submit" class="btn btn-success">Finish</button>
                     </div>
                 </div>
@@ -119,42 +131,65 @@
                 button.addEventListener('click', function() {
                     var currentModal = bootstrap.Modal.getInstance(this.closest('.modal'));
                     var targetModalId = this.getAttribute('data-bs-target');
-                    var targetModal = bootstrap.Modal.getInstance(document.querySelector(
-                        targetModalId));
+                    var targetModal = bootstrap.Modal.getInstance(document.querySelector(targetModalId));
 
                     currentModal.hide();
                     targetModal.show();
                 });
             });
 
+            var unitContainer = document.getElementById('unitContainer');
+            var addUnitBtn = document.getElementById('addUnit');
+
+            addUnitBtn.addEventListener('click', function() {
+                var newUnit = document.createElement('div');
+                newUnit.className = 'unit-entry mb-3';
+                newUnit.innerHTML = `
+                    <div class="row align-items-center">
+                        <div class="col-10">
+                            <input type="text" name="units[]" class="form-control" placeholder="Enter unit name" required>
+                        </div>
+                        <div class="col-2">
+                            <button type="button" class="btn btn-danger btn-sm remove-unit">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                unitContainer.appendChild(newUnit);
+            });
+
+            unitContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-unit') || e.target.closest('.remove-unit')) {
+                    e.target.closest('.unit-entry').remove();
+                }
+            });
+
             document.getElementById('multiStepForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 fetch(this.action, {
-                        method: 'POST',
-                        body: new FormData(this),
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        modals[2].hide();
-                        alert(data.message);
-                        window.location.reload();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred. Please try again.');
-                    });
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    modals[2].hide();
+                    alert(data.message);
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
             });
 
-            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener(
-                'click',
-                function() {
-                    modals[0].show();
-                });
+            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener('click', function() {
+                modals[0].show();
+            });
         });
     </script>
 @endpush
