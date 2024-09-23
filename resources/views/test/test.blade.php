@@ -7,10 +7,56 @@
                 <div class="card">
                     <div class="card-header">Multi-step Form</div>
                     <div class="card-body">
-                        <div class="text-end">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#step1Modal">
-                                Tambah PTJ
-                            </button>
+                        <div class="container mt-4">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <h2>Maklumat Ptj</h2>
+                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#step1Modal">
+                                            Tambah PTJ
+                                        </button>
+                                    </div>
+
+                                    @if ($message = Session::get('success'))
+                                        <div class="alert alert-success">
+                                            <p>{{ $message }}</p>
+                                        </div>
+                                    @endif
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <table class="table table-bordered table-striped" id="ptjTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Nama PTJ</th>
+                                                        <th>Kod PTJ</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($ptjs as $ptj)
+                                                        <tr>
+                                                            <td>{{ $loop->iteration }}</td>
+                                                            <td>{{ $ptj->nama_ptj }}</td>
+                                                            <td>{{ $ptj->kod_ptj }}</td>
+                                                            <td style="text-align: center;">
+                                                                <a href="javascript:void(0)" onClick="viewFunc({{ $ptj->id }})"
+                                                                    class="btn btn-primary btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Lihat</a>
+                                                                <a href="javascript:void(0)" onClick="editFunc({{ $ptj->id }})"
+                                                                    class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i> Kemaskini</a>
+                                                                <a href="javascript:void(0)" onClick="deleteFunc({{ $ptj->id }})"
+                                                                    class="btn btn-danger btn-sm"> <i class="fa fa-trash" aria-hidden="true"></i> Hapus</a>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                            {!! $ptjs->links('pagination::bootstrap-5') !!}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -18,6 +64,7 @@
         </div>
     </div>
 
+    <!-- Form Modal Start -->
     <form id="multiStepForm" action="{{ route('test.store') }}" method="POST">
         @csrf
         <!-- Step 1: PTJ Modal -->
@@ -84,21 +131,19 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="text-end">
-                            <button type="button" class="btn btn-primary btn-sm mt-2" id="addUnit">
+                        <div class="form-group mb-3 d-flex justify-content-end">
+                            <label for="unit" class="me-auto ms-2">Unit</label>
+                            <button type="button" class="btn btn-primary btn-sm" id="addUnit">
                                 <i class="fa fa-plus"></i> Add More Unit
                             </button>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="unit">Unit</label>
                         </div>
                         <div id="unitContainer">
                             <div class="unit-entry">
                                 <div class="row align-items-center">
                                     <div class="col-10">
-                                        <input type="text" name="units[]" class="form-control" placeholder="Enter unit name" required><br>
+                                        <input type="text" name="units[]" class="form-control" placeholder="Enter unit name" required>
                                     </div>
-                                    <div class="col-2">
+                                    <div class="col-2 d-flex align-items-center">
                                         <button type="button" class="btn btn-danger btn-sm remove-unit">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
@@ -106,7 +151,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary prev-step" data-bs-target="#step2Modal">Previous</button>
@@ -116,6 +160,8 @@
             </div>
         </div>
     </form>
+    <!-- Form Modal End -->
+
 @endsection
 
 @push('scripts')

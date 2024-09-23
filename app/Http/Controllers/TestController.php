@@ -13,7 +13,11 @@ class TestController extends Controller
 {
     public function index()
     {
-        return view('test.test');
+        $ptjs = Ptj::select('nama_ptj', 'kod_ptj')
+            ->latest()
+            ->paginate(15);
+
+        return view('test.test', compact('ptjs'));
     }
 
     public function store(Request $request)
