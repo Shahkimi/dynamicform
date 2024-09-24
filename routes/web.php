@@ -41,6 +41,7 @@ Route::prefix('bahagian/{bahagian}')->group(function () {
 });
 
 
-Route::get('/test', [App\Http\Controllers\TestController::class, 'index'])->name('test.index');
-Route::post('/test/store', [App\Http\Controllers\TestController::class, 'store'])->name('test.store');
-
+Route::get('/test', [TestController::class, 'index'])->name('test.index');
+Route::post('/test/store', [TestController::class, 'store'])->name('test.store');
+route::get('/ptj/{id}', [TestController::class, 'show'])->name('ptj.show');
+route::delete('/ptj/{id}', [TestController::class, 'destroy'])->name('ptj.destroy');

@@ -42,11 +42,15 @@
                                                             <td>{{ $ptj->kod_ptj }}</td>
                                                             <td style="text-align: center;">
                                                                 <a href="javascript:void(0)" onClick="viewFunc({{ $ptj->id }})"
-                                                                    class="btn btn-primary btn-sm"><i class="fa fa-eye" aria-hidden="true"></i> Lihat</a>
+                                                                    class="btn btn-primary btn-sm">
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i> Lihat
+                                                                </a>
                                                                 <a href="javascript:void(0)" onClick="editFunc({{ $ptj->id }})"
                                                                     class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i> Kemaskini</a>
                                                                 <a href="javascript:void(0)" onClick="deleteFunc({{ $ptj->id }})"
-                                                                    class="btn btn-danger btn-sm"> <i class="fa fa-trash" aria-hidden="true"></i> Hapus</a>
+                                                                    class="btn btn-danger btn-sm">
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i> Hapus
+                                                                </a>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -162,10 +166,48 @@
     </form>
     <!-- Form Modal End -->
 
+    <!-- View PTJ Modal -->
+    <div class="modal fade" id="viewPtjModal" tabindex="-1" aria-labelledby="viewPtjModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewPtjModalLabel">View PTJ Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Nama PTJ:</dt>
+                        <dd class="col-sm-8" id="viewNamaPtj"></dd>
+
+                        <dt class="col-sm-4">Kod PTJ:</dt>
+                        <dd class="col-sm-8" id="viewKodPtj"></dd>
+
+                        <dt class="col-sm-4">Alamat:</dt>
+                        <dd class="col-sm-8" id="viewAlamat"></dd>
+
+                        <dt class="col-sm-4">Pengarah:</dt>
+                        <dd class="col-sm-8" id="viewPengarah"></dd>
+
+                        <dt class="col-sm-4">Bahagian:</dt>
+                        <dd class="col-sm-8" id="viewBahagian"></dd>
+
+                        <dt class="col-sm-4">Unit:</dt>
+                        <dd class="col-sm-8" id="viewUnit"></dd>
+                    </dl>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- View PTJ Modal End -->
+
 @endsection
 
 @push('scripts')
     <script>
+        // Step-by-step form and save data
         document.addEventListener('DOMContentLoaded', function() {
             var modals = [
                 new bootstrap.Modal(document.getElementById('step1Modal')),
@@ -237,5 +279,104 @@
                 modals[0].show();
             });
         });
+
+        // PTJ View
+        function viewFunc(id) {
+            console.log('Viewing PTJ with id:', id);
+            if (id === undefined || id === null) {
+                console.error('Invalid PTJ id');
+                alert('An error occurred: Invalid PTJ id');
+                return;
+            }
+
+            fetch(`/ptj/${id}`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}\n${text}`);
+                        });
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    console.log('Raw response:', text);
+                    return JSON.parse(text);
+                })
+                .then(data => {
+                    console.log('Parsed data:', data);
+
+                    // Null checks for each property
+                    document.getElementById('viewNamaPtj').textContent = data.nama_ptj || 'N/A';
+                    document.getElementById('viewKodPtj').textContent = data.kod_ptj || 'N/A';
+                    document.getElementById('viewAlamat').textContent = data.alamat || 'N/A';
+                    document.getElementById('viewPengarah').textContent = data.pengarah || 'N/A';
+
+                    let bahagianHtml = '';
+                    if (data.bahagians && Array.isArray(data.bahagians) && data.bahagians.length > 0) {
+                        data.bahagians.forEach(bahagian => {
+                            bahagianHtml += `<li>${bahagian.bahagian || 'Unnamed Bahagian'}</li>`;
+                        });
+                    } else {
+                        bahagianHtml = 'No bahagians available';
+                    }
+                    document.getElementById('viewBahagian').innerHTML = `<ul>${bahagianHtml}</ul>`;
+
+                    let unitHtml = '';
+                    if (data.bahagians && Array.isArray(data.bahagians) && data.bahagians.length > 0) {
+                        data.bahagians.forEach(bahagian => {
+                            if (bahagian.units && Array.isArray(bahagian.units) && bahagian.units.length > 0) {
+                                bahagian.units.forEach(unit => {
+                                    unitHtml += `<li>${unit.unit || 'Unnamed Unit'}</li>`;
+                                });
+                            }
+                        });
+                    }
+                    if (unitHtml === '') {
+                        unitHtml = 'No units available';
+                    }
+                    document.getElementById('viewUnit').innerHTML = `<ul>${unitHtml}</ul>`;
+
+                    let viewPtjModal = new bootstrap.Modal(document.getElementById('viewPtjModal'));
+                    viewPtjModal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching the data. Check the console for more details.');
+                });
+        }
+
+        // PTJ Delete
+        function deleteFunc(id) {
+            if (confirm("Are you sure you want to delete this PTJ? This action cannot be undone and will also delete all related Bahagian and Unit records.")) {
+                fetch(`/ptj/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => {
+                    if (response.status === 419) { // CSRF token mismatch
+                        alert('Your session has expired. Please refresh the page and try again.');
+                        return;
+                    }
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    location.reload(); // Reload the page to reflect the changes
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the PTJ.');
+                });
+            }
+    }
     </script>
 @endpush
