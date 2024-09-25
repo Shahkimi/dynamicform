@@ -28,9 +28,9 @@
                                             <table class="table table-bordered table-striped" id="ptjTable">
                                                 <thead>
                                                     <tr>
-                                                        <th>No</th>
-                                                        <th>Nama PTJ</th>
+                                                        <th>Bil</th>
                                                         <th>Kod PTJ</th>
+                                                        <th>Nama PTJ</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -38,8 +38,8 @@
                                                     @foreach ($ptjs as $ptj)
                                                         <tr>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td>{{ $ptj->nama_ptj }}</td>
                                                             <td>{{ $ptj->kod_ptj }}</td>
+                                                            <td>{{ $ptj->nama_ptj }}</td>
                                                             <td style="text-align: center;">
                                                                 <a href="javascript:void(0)" onClick="viewFunc({{ $ptj->id }})"
                                                                     class="btn btn-primary btn-sm">
