@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    <!-- Form Show all data Start -->
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -13,7 +14,7 @@
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h2>Maklumat Ptj</h2>
                                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#step1Modal">
-                                            Tambah PTJ
+                                            <i class="fa fa-plus-circle" aria-hidden="true"></i> Tambah PTJ
                                         </button>
                                     </div>
 
@@ -31,6 +32,7 @@
                                                         <th>Bil</th>
                                                         <th>Kod PTJ</th>
                                                         <th>Nama PTJ</th>
+                                                        <th>Pengarah</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -40,16 +42,22 @@
                                                             <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $ptj->kod_ptj }}</td>
                                                             <td>{{ $ptj->nama_ptj }}</td>
+                                                            <td>{{ $ptj->pengarah }}</td>
                                                             <td style="text-align: center;">
                                                                 <a href="javascript:void(0)" onClick="viewFunc({{ $ptj->id }})"
                                                                     class="btn btn-primary btn-sm">
-                                                                    <i class="fa fa-eye" aria-hidden="true"></i> Lihat
+                                                                    <i class="fa fa-eye" aria-hidden="true"></i>
                                                                 </a>
                                                                 <a href="javascript:void(0)" onClick="editFunc({{ $ptj->id }})"
-                                                                    class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i> Kemaskini</a>
+                                                                    class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i>
+                                                                </a>
+                                                                <a href="javascript:void(0)" onClick="bahagianFunc({{ $ptj->id }})"
+                                                                    class="btn btn-info btn-sm">
+                                                                    <i class="fa fa-building" aria-hidden="true"></i>
+                                                                </a>
                                                                 <a href="javascript:void(0)" onClick="deleteFunc({{ $ptj->id }})"
                                                                     class="btn btn-danger btn-sm">
-                                                                    <i class="fa fa-trash" aria-hidden="true"></i> Hapus
+                                                                    <i class="fa fa-trash" aria-hidden="true"></i>
                                                                 </a>
                                                             </td>
                                                         </tr>
@@ -67,6 +75,7 @@
             </div>
         </div>
     </div>
+    <!-- Form Show all data End -->
 
     <!-- Form Modal Start -->
     <form id="multiStepForm" action="{{ route('test.store') }}" method="POST">
@@ -168,7 +177,7 @@
 
     <!-- View PTJ Modal -->
     <div class="modal fade" id="viewPtjModal" tabindex="-1" aria-labelledby="viewPtjModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="viewPtjModalLabel">View PTJ Details</h5>
@@ -176,24 +185,31 @@
                 </div>
                 <div class="modal-body">
                     <dl class="row">
-                        <dt class="col-sm-4">Nama PTJ:</dt>
-                        <dd class="col-sm-8" id="viewNamaPtj"></dd>
+                        <dt class="col-sm-3">Nama PTJ:</dt>
+                        <dd class="col-sm-9" id="viewNamaPtj"></dd>
 
-                        <dt class="col-sm-4">Kod PTJ:</dt>
-                        <dd class="col-sm-8" id="viewKodPtj"></dd>
+                        <dt class="col-sm-3">Kod PTJ:</dt>
+                        <dd class="col-sm-9" id="viewKodPtj"></dd>
 
-                        <dt class="col-sm-4">Alamat:</dt>
-                        <dd class="col-sm-8" id="viewAlamat"></dd>
+                        <dt class="col-sm-3">Alamat:</dt>
+                        <dd class="col-sm-9" id="viewAlamat"></dd>
 
-                        <dt class="col-sm-4">Pengarah:</dt>
-                        <dd class="col-sm-8" id="viewPengarah"></dd>
-
-                        <dt class="col-sm-4">Bahagian:</dt>
-                        <dd class="col-sm-8" id="viewBahagian"></dd>
-
-                        <dt class="col-sm-4">Unit:</dt>
-                        <dd class="col-sm-8" id="viewUnit"></dd>
+                        <dt class="col-sm-3">Pengarah:</dt>
+                        <dd class="col-sm-9" id="viewPengarah"></dd>
                     </dl>
+
+                    <h5 class="mt-4">Bahagian dan Unit</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Bahagian</th>
+                                <th>Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody id="viewBahagianUnitTable">
+                            <!-- This will be populated dynamically -->
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -291,52 +307,51 @@
 
             fetch(`/ptj/${id}`)
                 .then(response => {
-                    console.log('Response status:', response.status);
-                    console.log('Response headers:', response.headers);
                     if (!response.ok) {
-                        return response.text().then(text => {
-                            throw new Error(`Network response was not ok: ${response.status} ${response.statusText}\n${text}`);
-                        });
+                        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
                     }
-                    return response.text();
-                })
-                .then(text => {
-                    console.log('Raw response:', text);
-                    return JSON.parse(text);
+                    return response.json();
                 })
                 .then(data => {
                     console.log('Parsed data:', data);
 
-                    // Null checks for each property
+                    // Populate basic PTJ info
                     document.getElementById('viewNamaPtj').textContent = data.nama_ptj || 'N/A';
                     document.getElementById('viewKodPtj').textContent = data.kod_ptj || 'N/A';
                     document.getElementById('viewAlamat').textContent = data.alamat || 'N/A';
                     document.getElementById('viewPengarah').textContent = data.pengarah || 'N/A';
 
-                    let bahagianHtml = '';
-                    if (data.bahagians && Array.isArray(data.bahagians) && data.bahagians.length > 0) {
-                        data.bahagians.forEach(bahagian => {
-                            bahagianHtml += `<li>${bahagian.bahagian || 'Unnamed Bahagian'}</li>`;
-                        });
-                    } else {
-                        bahagianHtml = 'No bahagians available';
-                    }
-                    document.getElementById('viewBahagian').innerHTML = `<ul>${bahagianHtml}</ul>`;
+                    // Populate Bahagian and Unit table
+                    const tableBody = document.getElementById('viewBahagianUnitTable');
+                    tableBody.innerHTML = ''; // Clear existing content
 
-                    let unitHtml = '';
                     if (data.bahagians && Array.isArray(data.bahagians) && data.bahagians.length > 0) {
                         data.bahagians.forEach(bahagian => {
+                            const row = tableBody.insertRow();
+                            const bahagianCell = row.insertCell(0);
+                            const unitCell = row.insertCell(1);
+
+                            bahagianCell.textContent = bahagian.bahagian || 'Unnamed Bahagian';
+
                             if (bahagian.units && Array.isArray(bahagian.units) && bahagian.units.length > 0) {
+                                const unitList = document.createElement('ul');
+                                unitList.className = 'list-unstyled mb-0';
                                 bahagian.units.forEach(unit => {
-                                    unitHtml += `<li>${unit.unit || 'Unnamed Unit'}</li>`;
+                                    const listItem = document.createElement('li');
+                                    listItem.textContent = unit.unit || 'Unnamed Unit';
+                                    unitList.appendChild(listItem);
                                 });
+                                unitCell.appendChild(unitList);
+                            } else {
+                                unitCell.textContent = 'No units available';
                             }
                         });
+                    } else {
+                        const row = tableBody.insertRow();
+                        const cell = row.insertCell(0);
+                        cell.colSpan = 2;
+                        cell.textContent = 'No bahagians or units available';
                     }
-                    if (unitHtml === '') {
-                        unitHtml = 'No units available';
-                    }
-                    document.getElementById('viewUnit').innerHTML = `<ul>${unitHtml}</ul>`;
 
                     let viewPtjModal = new bootstrap.Modal(document.getElementById('viewPtjModal'));
                     viewPtjModal.show();
@@ -377,6 +392,10 @@
                     alert('An error occurred while deleting the PTJ.');
                 });
             }
-    }
+        }
+        function bahagianFunc(id) {
+            // Redirect to the bahagian page with the PTJ id
+            window.location.href = `/ptj/${id}/bahagian`;
+        }
     </script>
 @endpush

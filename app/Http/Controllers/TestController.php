@@ -15,7 +15,7 @@ class TestController extends Controller
 {
     public function index()
     {
-        $ptjs = Ptj::select('id', 'nama_ptj', 'kod_ptj')
+        $ptjs = Ptj::select('id', 'nama_ptj', 'kod_ptj', 'pengarah')
             ->latest()
             ->paginate(15);
 
@@ -82,5 +82,10 @@ class TestController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while deleting the PTJ'], 500);
         }
+    }
+    public function showBahagian($id)
+    {
+        $ptj = Ptj::with(['bahagians.units'])->findOrFail($id);
+        return view('test.bahagian', compact('ptj'));
     }
 }
