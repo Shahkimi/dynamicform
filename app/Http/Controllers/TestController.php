@@ -143,4 +143,53 @@ class TestController extends Controller
             return response()->json(['message' => 'An error occurred while deleting the Bahagian'], 500);
         }
     }
+    public function editBahagian($id)
+    {
+        $bahagian = Bahagian::with('units')->findOrFail($id);
+        return response()->json($bahagian);
+    }
+
+    public function updateBahagian(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'bahagian' => 'required|string|max:255',
+            'units' => 'required|array',
+            'units.*' => 'required|string|max:255',
+            'unit_ids' => 'required|array',
+            'unit_ids.*' => 'nullable|exists:unit,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $bahagian = Bahagian::findOrFail($id);
+            $bahagian->update(['bahagian' => $request->bahagian]);
+
+            // Update or create units
+            foreach ($request->units as $index => $unitName) {
+                if (!empty($request->unit_ids[$index])) {
+                    Unit::where('id', $request->unit_ids[$index])->update(['unit' => $unitName]);
+                } else {
+                    $bahagian->units()->create(['unit' => $unitName]);
+                }
+            }
+
+            // Delete units that were removed
+            $existingUnitIds = $bahagian->units->pluck('id')->toArray();
+            $keptUnitIds = array_filter($request->unit_ids);
+            $deletedUnitIds = array_diff($existingUnitIds, $keptUnitIds);
+            Unit::destroy($deletedUnitIds);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Bahagian updated successfully!'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'An error occurred while updating the data.'], 500);
+        }
+    }
 }
