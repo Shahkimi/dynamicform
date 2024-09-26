@@ -122,7 +122,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editBahagianForm">
+                    <form id="editBahagianForm" action="{{ route('test.bahagian.update', ':id') }}" method="POST">
                         @csrf
                         @method('PUT')
                         <input type="hidden" id="edit_bahagian_id" name="bahagian_id">
@@ -154,11 +154,16 @@
 <script>
     function editBahagian(id) {
         $.ajax({
-            url: `/bahagian/${id}/edit`,
+            url: "{{ route('test.bahagian.edit', ':id') }}".replace(':id', id),
             type: 'GET',
             success: function(response) {
                 $('#edit_bahagian_id').val(response.id);
                 $('#edit_bahagian').val(response.bahagian);
+
+                // Update form action URL
+                var action = $('#editBahagianForm').attr('action');
+                action = action.replace(':id', response.id);
+                $('#editBahagianForm').attr('action', action);
 
                 // Clear existing units
                 $('#editUnitContainer').empty();
@@ -241,11 +246,12 @@
         });
 
         $('#updateBahagianBtn').on('click', function() {
-            var formData = $('#editBahagianForm').serialize();
+            var form = $('#editBahagianForm');
+            var formData = form.serialize();
             var bahagianId = $('#edit_bahagian_id').val();
             $.ajax({
-                url: `/bahagian/${bahagianId}`,
-                type: 'PUT',
+                url: form.attr('action').replace(':id', bahagianId),
+                type: 'POST',
                 data: formData,
                 success: function(response) {
                     $('#editBahagianModal').modal('hide');
