@@ -83,9 +83,64 @@ class TestController extends Controller
             return response()->json(['message' => 'An error occurred while deleting the PTJ'], 500);
         }
     }
+
+    //Bahagian controller Section
     public function showBahagian($id)
     {
-        $ptj = Ptj::with(['bahagians.units'])->findOrFail($id);
-        return view('test.bahagian', compact('ptj'));
+        $ptj = Ptj::findOrFail($id);
+        $bahagians = $ptj->bahagians()->with('units')->paginate(5);
+        return view('test.bahagian', compact('ptj', 'bahagians'));
+    }
+    public function storeBahagian(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'ptj_id' => 'required|exists:ptj,id',
+            'bahagian' => 'required|string|max:255',
+            'units' => 'required|array',
+            'units.*' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $bahagian = Bahagian::create([
+                'ptj_id' => $request->ptj_id,
+                'bahagian' => $request->bahagian,
+            ]);
+
+            foreach ($request->units as $unit) {
+                $bahagian->units()->create([
+                    'unit' => $unit,
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Bahagian added successfully!'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'An error occurred while saving the data.'], 500);
+        }
+    }
+    public function destroyBahagian($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $bahagian = Bahagian::findOrFail($id);
+            $bahagian->units()->delete(); // Delete associated units
+            $bahagian->delete(); // Delete the bahagian
+
+            DB::commit();
+
+            return response()->json(['message' => 'Bahagian and associated units deleted successfully']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'An error occurred while deleting the Bahagian'], 500);
+        }
     }
 }

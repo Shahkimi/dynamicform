@@ -47,4 +47,5 @@ route::get('/ptj/{id}', [TestController::class, 'show'])->name('ptj.show');
 route::delete('/ptj/{id}', [TestController::class, 'destroy'])->name('ptj.destroy');
 //Bahagian section
 Route::get('/ptj/{id}/bahagian', [TestController::class, 'showBahagian'])->name('ptj.bahagian');
-
+Route::post('/bahagian', [TestController::class, 'storeBahagian'])->name('bahagian.store');
+Route::delete('/bahagian/{id}', [TestController::class, 'destroyBahagian'])->name('bahagian.destroy');
