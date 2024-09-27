@@ -237,20 +237,20 @@
                         @method('PUT')
                         <input type="hidden" id="edit_ptj_id" name="ptj_id">
                         <div class="mb-3">
-                            <label for="edit_nama_ptj" class="form-label">Nama PTJ</label>
-                            <input type="text" class="form-control" id="edit_nama_ptj" name="nama_ptj" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="edit_kod_ptj" class="form-label">Kod PTJ</label>
                             <input type="text" class="form-control" id="edit_kod_ptj" name="kod_ptj" required>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_alamat" class="form-label">Alamat</label>
-                            <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
+                            <label for="edit_nama_ptj" class="form-label">Nama PTJ</label>
+                            <input type="text" class="form-control" id="edit_nama_ptj" name="nama_ptj" required>
                         </div>
                         <div class="mb-3">
                             <label for="edit_pengarah" class="form-label">Pengarah</label>
                             <input type="text" class="form-control" id="edit_pengarah" name="pengarah" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_alamat" class="form-label">Alamat</label>
+                            <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
                         </div>
                     </form>
                 </div>
