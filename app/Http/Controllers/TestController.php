@@ -91,6 +91,7 @@ class TestController extends Controller
         $bahagians = $ptj->bahagians()->with('units')->paginate(5);
         return view('test.bahagian', compact('ptj', 'bahagians'));
     }
+
     public function storeBahagian(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -126,6 +127,7 @@ class TestController extends Controller
             return response()->json(['message' => 'An error occurred while saving the data.'], 500);
         }
     }
+
     public function destroyBahagian($id)
     {
         try {
@@ -143,6 +145,7 @@ class TestController extends Controller
             return response()->json(['message' => 'An error occurred while deleting the Bahagian'], 500);
         }
     }
+
     public function editBahagian($id)
     {
         $bahagian = Bahagian::with('units')->findOrFail($id);
@@ -190,6 +193,38 @@ class TestController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'An error occurred while updating the data.'], 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        $ptj = Ptj::findOrFail($id);
+        return response()->json($ptj);
+    }
+
+    public function update(Request $request, $id)
+    {
+        \Log::info('Update request received:', $request->all());
+
+        $validator = Validator::make($request->all(), [
+            'nama_ptj' => 'required|string|max:255',
+            'kod_ptj' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'pengarah' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            \Log::error('Validation failed:', $validator->errors()->toArray());
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            $ptj = Ptj::findOrFail($id);
+            $ptj->update($request->all());
+            return response()->json(['message' => 'PTJ updated successfully!']);
+        } catch (\Exception $e) {
+            \Log::error('Error updating PTJ:', ['message' => $e->getMessage()]);
+            return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
     }
 }

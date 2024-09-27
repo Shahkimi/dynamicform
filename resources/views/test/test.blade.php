@@ -4,7 +4,7 @@
     <!-- Form Show all data Start -->
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12"> <!-- resize modal -->
                 <div class="card">
                     <div class="card-header">Multi-step Form</div>
                     <div class="card-body">
@@ -12,8 +12,9 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <h2>Maklumat Ptj</h2>
-                                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#step1Modal">
+                                        <h3>Senarai PTJ</h3>
+                                        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#step1Modal">
                                             <i class="fa fa-plus-circle" aria-hidden="true"></i> Tambah PTJ
                                         </button>
                                     </div>
@@ -33,7 +34,7 @@
                                                         <th>Kod PTJ</th>
                                                         <th>Nama PTJ</th>
                                                         <th>Pengarah</th>
-                                                        <th>Action</th>
+                                                        <th style="text-align: center;">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -43,20 +44,25 @@
                                                             <td>{{ $ptj->kod_ptj }}</td>
                                                             <td>{{ $ptj->nama_ptj }}</td>
                                                             <td>{{ $ptj->pengarah }}</td>
-                                                            <td style="text-align: center;">
-                                                                <a href="javascript:void(0)" onClick="viewFunc({{ $ptj->id }})"
-                                                                    class="btn btn-primary btn-sm">
+                                                            <td style="text-align: center; vertical-align: middle;">
+                                                                <a href="javascript:void(0)"
+                                                                    onClick="viewFunc({{ $ptj->id }})"
+                                                                    class="btn btn-primary btn-sm d-inline-block">
                                                                     <i class="fa fa-eye" aria-hidden="true"></i>
                                                                 </a>
-                                                                <a href="javascript:void(0)" onClick="editFunc({{ $ptj->id }})"
-                                                                    class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i>
+                                                                <a href="javascript:void(0)"
+                                                                    onClick="editFunc({{ $ptj->id }})"
+                                                                    class="btn btn-success btn-sm d-inline-block">
+                                                                    <i class="fa fa-pencil" aria-hidden="true"></i>
                                                                 </a>
-                                                                <a href="javascript:void(0)" onClick="bahagianFunc({{ $ptj->id }})"
-                                                                    class="btn btn-info btn-sm">
+                                                                <a href="javascript:void(0)"
+                                                                    onClick="bahagianFunc({{ $ptj->id }})"
+                                                                    class="btn btn-info btn-sm d-inline-block">
                                                                     <i class="fa fa-building" aria-hidden="true"></i>
                                                                 </a>
-                                                                <a href="javascript:void(0)" onClick="deleteFunc({{ $ptj->id }})"
-                                                                    class="btn btn-danger btn-sm">
+                                                                <a href="javascript:void(0)"
+                                                                    onClick="deleteFunc({{ $ptj->id }})"
+                                                                    class="btn btn-danger btn-sm d-inline-block">
                                                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                                                 </a>
                                                             </td>
@@ -91,19 +97,23 @@
                     <div class="modal-body">
                         <div class="form-group mb-3">
                             <label for="nama_ptj">Hospital Name</label>
-                            <input type="text" class="form-control" name="nama_ptj" required placeholder="Enter hospital name">
+                            <input type="text" class="form-control" name="nama_ptj" required
+                                placeholder="Enter hospital name">
                         </div>
                         <div class="form-group mb-3">
                             <label for="kod_ptj">Hospital Code</label>
-                            <input type="text" class="form-control" name="kod_ptj" required placeholder="Enter hospital code">
+                            <input type="text" class="form-control" name="kod_ptj" required
+                                placeholder="Enter hospital code">
                         </div>
                         <div class="form-group mb-3">
                             <label for="alamat">Address</label>
-                            <input type="text" class="form-control" name="alamat" required placeholder="Enter hospital address">
+                            <input type="text" class="form-control" name="alamat" required
+                                placeholder="Enter hospital address">
                         </div>
                         <div class="form-group mb-3">
                             <label for="pengarah">Director</label>
-                            <input type="text" class="form-control" name="pengarah" required placeholder="Enter director's name">
+                            <input type="text" class="form-control" name="pengarah" required
+                                placeholder="Enter director's name">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -124,12 +134,15 @@
                     <div class="modal-body">
                         <div class="form-group mb-3">
                             <label for="bahagian">Bahagian</label>
-                            <input type="text" class="form-control" name="bahagian" required placeholder="Enter section name">
+                            <input type="text" class="form-control" name="bahagian" required
+                                placeholder="Enter section name">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary prev-step" data-bs-target="#step1Modal">Previous</button>
-                        <button type="button" class="btn btn-primary next-step" data-bs-target="#step3Modal">Next</button>
+                        <button type="button" class="btn btn-secondary prev-step"
+                            data-bs-target="#step1Modal">Previous</button>
+                        <button type="button" class="btn btn-primary next-step"
+                            data-bs-target="#step3Modal">Next</button>
                     </div>
                 </div>
             </div>
@@ -154,7 +167,8 @@
                             <div class="unit-entry">
                                 <div class="row align-items-center">
                                     <div class="col-10">
-                                        <input type="text" name="units[]" class="form-control" placeholder="Enter unit name" required>
+                                        <input type="text" name="units[]" class="form-control"
+                                            placeholder="Enter unit name" required>
                                     </div>
                                     <div class="col-2 d-flex align-items-center">
                                         <button type="button" class="btn btn-danger btn-sm remove-unit">
@@ -166,7 +180,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary prev-step" data-bs-target="#step2Modal">Previous</button>
+                        <button type="button" class="btn btn-secondary prev-step"
+                            data-bs-target="#step2Modal">Previous</button>
                         <button type="submit" class="btn btn-success">Finish</button>
                     </div>
                 </div>
@@ -177,39 +192,28 @@
 
     <!-- View PTJ Modal -->
     <div class="modal fade" id="viewPtjModal" tabindex="-1" aria-labelledby="viewPtjModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="viewPtjModalLabel">View PTJ Details</h5>
+                    <h5 class="modal-title" id="viewPtjModalLabel">Maklumat PTJ</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <dl class="row">
-                        <dt class="col-sm-3">Nama PTJ:</dt>
-                        <dd class="col-sm-9" id="viewNamaPtj"></dd>
 
                         <dt class="col-sm-3">Kod PTJ:</dt>
                         <dd class="col-sm-9" id="viewKodPtj"></dd>
 
-                        <dt class="col-sm-3">Alamat:</dt>
-                        <dd class="col-sm-9" id="viewAlamat"></dd>
+                        <dt class="col-sm-3">Nama PTJ:</dt>
+                        <dd class="col-sm-9" id="viewNamaPtj"></dd>
 
                         <dt class="col-sm-3">Pengarah:</dt>
                         <dd class="col-sm-9" id="viewPengarah"></dd>
-                    </dl>
 
-                    <h5 class="mt-4">Bahagian dan Unit</h5>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Bahagian</th>
-                                <th>Unit</th>
-                            </tr>
-                        </thead>
-                        <tbody id="viewBahagianUnitTable">
-                            <!-- This will be populated dynamically -->
-                        </tbody>
-                    </table>
+                        <dt class="col-sm-3">Alamat:</dt>
+                        <dd class="col-sm-9" id="viewAlamat"></dd>
+
+                    </dl>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -219,6 +223,45 @@
     </div>
     <!-- View PTJ Modal End -->
 
+    <!-- Edit PTJ Modal -->
+    <div class="modal fade" id="editPtjModal" tabindex="-1" aria-labelledby="editPtjModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPtjModalLabel">Edit PTJ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPtjForm">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" id="edit_ptj_id" name="ptj_id">
+                        <div class="mb-3">
+                            <label for="edit_nama_ptj" class="form-label">Nama PTJ</label>
+                            <input type="text" class="form-control" id="edit_nama_ptj" name="nama_ptj" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_kod_ptj" class="form-label">Kod PTJ</label>
+                            <input type="text" class="form-control" id="edit_kod_ptj" name="kod_ptj" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_alamat" class="form-label">Alamat</label>
+                            <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_pengarah" class="form-label">Pengarah</label>
+                            <input type="text" class="form-control" id="edit_pengarah" name="pengarah" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="updatePtjBtn">Update PTJ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit PTJ Modal End -->
 @endsection
 
 @push('scripts')
@@ -235,7 +278,8 @@
                 button.addEventListener('click', function() {
                     var currentModal = bootstrap.Modal.getInstance(this.closest('.modal'));
                     var targetModalId = this.getAttribute('data-bs-target');
-                    var targetModal = bootstrap.Modal.getInstance(document.querySelector(targetModalId));
+                    var targetModal = bootstrap.Modal.getInstance(document.querySelector(
+                        targetModalId));
 
                     currentModal.hide();
                     targetModal.show();
@@ -272,28 +316,31 @@
             document.getElementById('multiStepForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 fetch(this.action, {
-                    method: 'POST',
-                    body: new FormData(this),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    modals[2].hide();
-                    alert(data.message);
-                    window.location.reload();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                });
+                        method: 'POST',
+                        body: new FormData(this),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        modals[2].hide();
+                        alert(data.message);
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    });
             });
 
-            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener('click', function() {
-                modals[0].show();
-            });
+            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener(
+                'click',
+                function() {
+                    modals[0].show();
+                });
         });
 
         // PTJ View
@@ -321,37 +368,6 @@
                     document.getElementById('viewAlamat').textContent = data.alamat || 'N/A';
                     document.getElementById('viewPengarah').textContent = data.pengarah || 'N/A';
 
-                    // Populate Bahagian and Unit table
-                    const tableBody = document.getElementById('viewBahagianUnitTable');
-                    tableBody.innerHTML = ''; // Clear existing content
-
-                    if (data.bahagians && Array.isArray(data.bahagians) && data.bahagians.length > 0) {
-                        data.bahagians.forEach(bahagian => {
-                            const row = tableBody.insertRow();
-                            const bahagianCell = row.insertCell(0);
-                            const unitCell = row.insertCell(1);
-
-                            bahagianCell.textContent = bahagian.bahagian || 'Unnamed Bahagian';
-
-                            if (bahagian.units && Array.isArray(bahagian.units) && bahagian.units.length > 0) {
-                                const unitList = document.createElement('ul');
-                                unitList.className = 'list-unstyled mb-0';
-                                bahagian.units.forEach(unit => {
-                                    const listItem = document.createElement('li');
-                                    listItem.textContent = unit.unit || 'Unnamed Unit';
-                                    unitList.appendChild(listItem);
-                                });
-                                unitCell.appendChild(unitList);
-                            } else {
-                                unitCell.textContent = 'No units available';
-                            }
-                        });
-                    } else {
-                        const row = tableBody.insertRow();
-                        const cell = row.insertCell(0);
-                        cell.colSpan = 2;
-                        cell.textContent = 'No bahagians or units available';
-                    }
 
                     let viewPtjModal = new bootstrap.Modal(document.getElementById('viewPtjModal'));
                     viewPtjModal.show();
@@ -364,38 +380,102 @@
 
         // PTJ Delete
         function deleteFunc(id) {
-            if (confirm("Are you sure you want to delete this PTJ? This action cannot be undone and will also delete all related Bahagian and Unit records.")) {
+            if (confirm(
+                    "Are you sure you want to delete this PTJ? This action cannot be undone and will also delete all related Bahagian and Unit records."
+                )) {
                 fetch(`/ptj/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => {
-                    if (response.status === 419) { // CSRF token mismatch
-                        alert('Your session has expired. Please refresh the page and try again.');
-                        return;
-                    }
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert(data.message);
-                    location.reload(); // Reload the page to reflect the changes
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the PTJ.');
-                });
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                    })
+                    .then(response => {
+                        if (response.status === 419) { // CSRF token mismatch
+                            alert('Your session has expired. Please refresh the page and try again.');
+                            return;
+                        }
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert(data.message);
+                        location.reload(); // Reload the page to reflect the changes
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the PTJ.');
+                    });
             }
         }
+
         function bahagianFunc(id) {
             // Redirect to the bahagian page with the PTJ id
             window.location.href = `/ptj/${id}/bahagian`;
         }
+
+        // PTJ Edit
+        function editFunc(id) {
+            fetch(`/ptj/${id}/edit`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('edit_ptj_id').value = data.id;
+                    document.getElementById('edit_nama_ptj').value = data.nama_ptj;
+                    document.getElementById('edit_kod_ptj').value = data.kod_ptj;
+                    document.getElementById('edit_alamat').value = data.alamat;
+                    document.getElementById('edit_pengarah').value = data.pengarah;
+
+                    let editPtjModal = new bootstrap.Modal(document.getElementById('editPtjModal'));
+                    editPtjModal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching the PTJ data.');
+                });
+        }
+
+        // PTJ Update
+        document.getElementById('updatePtjBtn').addEventListener('click', function() {
+            let form = document.getElementById('editPtjForm');
+            let formData = new FormData(form);
+            let ptjId = document.getElementById('edit_ptj_id').value;
+
+            // Convert FormData to a plain object
+            let plainFormData = Object.fromEntries(formData.entries());
+
+            fetch(`/ptj/${ptjId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify(plainFormData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.errors) {
+                        console.log('Validation errors:', data.errors);
+                        let errorMessage = 'Validation errors:\n';
+                        for (let field in data.errors) {
+                            errorMessage += `${field}: ${data.errors[field].join(', ')}\n`;
+                        }
+                        alert(errorMessage);
+                    } else {
+                        let editPtjModal = bootstrap.Modal.getInstance(document.getElementById('editPtjModal'));
+                        editPtjModal.hide();
+                        alert(data.message);
+                        window.location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while updating the PTJ.');
+                });
+        });
     </script>
 @endpush

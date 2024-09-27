@@ -40,11 +40,13 @@ Route::prefix('bahagian/{bahagian}')->group(function () {
     Route::post('unit/store', [PtjController::class, 'storeUnit'])->name('storeUnit');
 });
 
-
+// Test PTJ section
 Route::get('/test', [TestController::class, 'index'])->name('test.index');
 Route::post('/test/store', [TestController::class, 'store'])->name('test.store');
 route::get('/ptj/{id}', [TestController::class, 'show'])->name('ptj.show');
 route::delete('/ptj/{id}', [TestController::class, 'destroy'])->name('ptj.destroy');
+Route::get('/ptj/{id}/edit', [TestController::class, 'edit']);
+Route::put('/ptj/{id}', [TestController::class, 'update']);
 //Bahagian section
 Route::get('/ptj/{id}/bahagian', [TestController::class, 'showBahagian'])->name('ptj.bahagian');
 Route::post('/bahagian', [TestController::class, 'storeBahagian'])->name('bahagian.store');
