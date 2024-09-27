@@ -41,9 +41,9 @@
                                                     @foreach ($ptjs as $ptj)
                                                         <tr>
                                                             <td>{{ $loop->iteration }}</td>
-                                                            <td>{{ $ptj->kod_ptj }}</td>
-                                                            <td>{{ $ptj->nama_ptj }}</td>
-                                                            <td>{{ $ptj->pengarah }}</td>
+                                                            <td>{{ strtoupper($ptj->kod_ptj) }}</td>
+                                                            <td>{{ strtoupper($ptj->nama_ptj) }}</td>
+                                                            <td>{{ strtoupper($ptj->pengarah) }}</td>
                                                             <td style="text-align: center; vertical-align: middle;">
                                                                 <a href="javascript:void(0)"
                                                                     onClick="viewFunc({{ $ptj->id }})"

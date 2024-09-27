@@ -40,11 +40,11 @@
                                                 <tbody>
                                                     @foreach ($bahagians as $bahagian)
                                                         <tr>
-                                                            <td>{{ $bahagian->bahagian }}</td>
+                                                            <td>{{ strtoupper($bahagian->bahagian) }}</td>
                                                             <td>
                                                                 <ul class="list-unstyled mb-0">
                                                                     @foreach ($bahagian->units as $unit)
-                                                                        <li>{{ $unit->unit }}</li>
+                                                                        <li>{{ strtoupper($unit->unit) }}</li>
                                                                     @endforeach
                                                                 </ul>
                                                             </td>
