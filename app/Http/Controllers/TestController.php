@@ -17,7 +17,7 @@ class TestController extends Controller
     {
         $ptjs = Ptj::select('id', 'nama_ptj', 'kod_ptj', 'pengarah')
             ->latest()
-            ->paginate(15);
+            ->paginate(10);
 
         return view('test.test', compact('ptjs'));
     }
@@ -227,4 +227,21 @@ class TestController extends Controller
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
     }
+    public function search(Request $request)
+{
+    \Log::info('Search request received:', $request->all());
+
+    $search = $request->input('search');
+    \Log::info('Search term:', ['search' => $search]);
+
+    $ptjs = Ptj::where(function ($query) use ($search) {
+        $query->where('nama_ptj', 'like', "%$search%")
+            ->orWhere('kod_ptj', 'like', "%$search%")
+            ->orWhere('alamat', 'like', "%$search%");
+    })->get();
+
+    \Log::info('Search results:', ['count' => $ptjs->count(), 'results' => $ptjs->toArray()]);
+
+    return response()->json(['data' => $ptjs]);
+}
 }

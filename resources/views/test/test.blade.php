@@ -18,6 +18,15 @@
                                             <i class="fa fa-plus-circle" aria-hidden="true"></i> Tambah PTJ
                                         </button>
                                     </div>
+                                    <form id="searchForm" method="POST" class="d-flex justify-content-center">
+                                        @csrf
+                                        <div class="input-group w-50 mb-4">
+                                            <input class="form-control" id="search" name="search"
+                                                placeholder="Carian...">
+                                            <button type="submit" class="btn btn-primary"> <i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
 
                                     @if ($message = Session::get('success'))
                                         <div class="alert alert-success">
@@ -37,7 +46,7 @@
                                                         <th style="text-align: center;">Action</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody id="ptjTableBody">
                                                     @foreach ($ptjs as $ptj)
                                                         <tr>
                                                             <td>{{ $loop->iteration }}</td>
@@ -96,24 +105,24 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group mb-3">
-                            <label for="nama_ptj">Hospital Name</label>
+                            <label for="nama_ptj">Nama Hospital</label>
                             <input type="text" class="form-control" name="nama_ptj" required
-                                placeholder="Enter hospital name">
+                                placeholder="Masukkan Nama Hospital">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="kod_ptj">Hospital Code</label>
+                            <label for="kod_ptj">Kod Hospital</label>
                             <input type="text" class="form-control" name="kod_ptj" required
-                                placeholder="Enter hospital code">
+                                placeholder="Masukkan Kod Hospital">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="alamat">Address</label>
+                            <label for="alamat">Alamat Hospital</label>
                             <input type="text" class="form-control" name="alamat" required
-                                placeholder="Enter hospital address">
+                                placeholder="Masukkan Alamat Hospital">
                         </div>
                         <div class="form-group mb-3">
-                            <label for="pengarah">Director</label>
+                            <label for="pengarah">Nama Pengarah</label>
                             <input type="text" class="form-control" name="pengarah" required
-                                placeholder="Enter director's name">
+                                placeholder="Masukkkan Nama Pengarah">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -191,6 +200,7 @@
     <!-- Form Modal End -->
 
     <!-- View PTJ Modal -->
+    <!-- View PTJ Modal -->
     <div class="modal fade" id="viewPtjModal" tabindex="-1" aria-labelledby="viewPtjModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -200,19 +210,29 @@
                 </div>
                 <div class="modal-body">
                     <dl class="row">
-
                         <dt class="col-sm-3">Kod PTJ:</dt>
-                        <dd class="col-sm-9" id="viewKodPtj"></dd>
+                        <dd class="col-sm-9">
+                            <input class="form-control" type="text" id="viewKodPtj" aria-label="Kod PTJ" disabled
+                                readonly>
+                        </dd>
 
                         <dt class="col-sm-3">Nama PTJ:</dt>
-                        <dd class="col-sm-9" id="viewNamaPtj"></dd>
+                        <dd class="col-sm-9">
+                            <input class="form-control" type="text" id="viewNamaPtj" aria-label="Nama PTJ" disabled
+                                readonly>
+                        </dd>
 
                         <dt class="col-sm-3">Pengarah:</dt>
-                        <dd class="col-sm-9" id="viewPengarah"></dd>
+                        <dd class="col-sm-9">
+                            <textarea class="form-control" id="viewPengarah" rows="3" aria-label="Pengarah" disabled readonly
+                                style="resize: none;"></textarea>
+                        </dd>
 
                         <dt class="col-sm-3">Alamat:</dt>
-                        <dd class="col-sm-9" id="viewAlamat"></dd>
-
+                        <dd class="col-sm-9">
+                            <textarea class="form-control" id="viewAlamat" rows="3" aria-label="Alamat" disabled readonly
+                                style="resize: none;"></textarea>
+                        </dd>
                     </dl>
                 </div>
                 <div class="modal-footer">
@@ -228,7 +248,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editPtjModalLabel">Edit PTJ</h5>
+                    <h5 class="modal-title" id="editPtjModalLabel">Edit Maklumat PTJ</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -250,13 +270,13 @@
                         </div>
                         <div class="mb-3">
                             <label for="edit_alamat" class="form-label">Alamat</label>
-                            <input type="text" class="form-control" id="edit_alamat" name="alamat" required>
+                            <textarea class="form-control" id="edit_alamat" name="alamat" rows="3" required></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="updatePtjBtn">Update PTJ</button>
+                    <button type="button" class="btn btn-primary" id="updatePtjBtn">Kemaskini Maklumat</button>
                 </div>
             </div>
         </div>
@@ -363,11 +383,10 @@
                     console.log('Parsed data:', data);
 
                     // Populate basic PTJ info
-                    document.getElementById('viewNamaPtj').textContent = data.nama_ptj || 'N/A';
-                    document.getElementById('viewKodPtj').textContent = data.kod_ptj || 'N/A';
-                    document.getElementById('viewAlamat').textContent = data.alamat || 'N/A';
-                    document.getElementById('viewPengarah').textContent = data.pengarah || 'N/A';
-
+                    document.getElementById('viewNamaPtj').value = data.nama_ptj || 'N/A';
+                    document.getElementById('viewKodPtj').value = data.kod_ptj || 'N/A';
+                    document.getElementById('viewPengarah').value = data.pengarah || 'N/A';
+                    document.getElementById('viewAlamat').value = data.alamat || 'N/A';
 
                     let viewPtjModal = new bootstrap.Modal(document.getElementById('viewPtjModal'));
                     viewPtjModal.show();
@@ -476,6 +495,69 @@
                     console.error('Error:', error);
                     alert('An error occurred while updating the PTJ.');
                 });
+        });
+
+        //PTJ Search
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+
+            let searchQuery = $('#search').val();
+            console.log('Search query:', searchQuery);
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('search') }}',
+                data: {
+                    search: searchQuery
+                },
+                success: function(response) {
+                    console.log('Search response:', response);
+                    if (response.data && response.data.length > 0) {
+                        let rows = '';
+                        response.data.forEach(function(item, index) {
+                            rows += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.kod_ptj}</td>
+                            <td>${item.nama_ptj}</td>
+                            <td>${item.pengarah}</td>
+                            <td style="text-align: center; vertical-align: middle;">
+                                <a href="javascript:void(0)"
+                                    onClick="viewFunc(${item.id})"
+                                    class="btn btn-primary btn-sm d-inline-block">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onClick="editFunc(${item.id})"
+                                    class="btn btn-success btn-sm d-inline-block">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onClick="bahagianFunc(${item.id})"
+                                    class="btn btn-info btn-sm d-inline-block">
+                                    <i class="fa fa-building" aria-hidden="true"></i>
+                                </a>
+                                <a href="javascript:void(0)"
+                                    onClick="deleteFunc(${item.id})"
+                                    class="btn btn-danger btn-sm d-inline-block">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>`;
+                        });
+                        $('#ptjTableBody').html(rows);
+                    } else {
+                        $('#ptjTableBody').html('<tr><td colspan="5">No results found</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Search error:', error);
+                    console.log('XHR:', xhr);
+                    alert(
+                        'An error occurred while searching. Please check the console for more details.'
+                    );
+                }
+            });
         });
     </script>
 @endpush

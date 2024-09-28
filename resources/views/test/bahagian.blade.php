@@ -17,8 +17,8 @@
                                         </div>
                                         <div>
                                             <button class="btn btn-success btn-sm"
-                                                onclick="addBahagian({{ $ptj->id }})"><i class="fa fa-plus-circle"
-                                                    aria-hidden="true"></i> Tambah Bahagian</button>
+                                                onclick="addBahagian({{ $ptj->id }})"><i class="fas fa-plus"></i></i>
+                                                Tambah Bahagian</button>
                                         </div>
                                     </div>
                                     @if ($message = Session::get('success'))
