@@ -30,7 +30,17 @@
                                                 onclick="addBahagian({{ $ptj->id }})"><i class="fas fa-plus"></i></i>
                                                 Tambah Bahagian</button>
                                         </div>
+
                                     </div>
+                                    <form id="searchFormBahagian" method="POST" class="d-flex justify-content-center">
+                                        @csrf
+                                        <div class="input-group w-50 mb-4">
+                                            <input class="form-control" id="search" name="search"
+                                                placeholder="Carian...">
+                                            <button type="submit" class="btn btn-primary"> <i
+                                                    class="fas fa-search"></i></button>
+                                        </div>
+                                    </form>
                                     @if ($message = Session::get('success'))
                                         <div class="alert alert-success">
                                             <p>{{ $message }}</p>
@@ -83,9 +93,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="mt-3">
-            <a href="{{ route('test.index') }}" class="btn btn-secondary btn-sm">Back to PTJ List</a>
         </div>
 
         <!-- Add Bahagian Modal -->
@@ -265,27 +272,83 @@
                     }
                 });
             });
+        });
 
-            // Update Bahagian
-            $('#updateBahagianBtn').on('click', function() {
-                var form = $('#editBahagianForm');
-                var formData = form.serialize();
-                var bahagianId = $('#edit_bahagian_id').val();
-                $.ajax({
-                    url: form.attr('action').replace(':id', bahagianId),
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('#editBahagianModal').modal('hide');
-                        alert('Bahagian updated successfully');
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Error updating Bahagian');
-                        console.log(xhr.responseText);
-                    }
-                });
+        // Update Bahagian
+        $('#updateBahagianBtn').on('click', function() {
+            var form = $('#editBahagianForm');
+            var formData = form.serialize();
+            var bahagianId = $('#edit_bahagian_id').val();
+            $.ajax({
+                url: form.attr('action').replace(':id', bahagianId),
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    $('#editBahagianModal').modal('hide');
+                    alert('Bahagian updated successfully');
+                    location.reload();
+                },
+                error: function(xhr) {
+                    alert('Error updating Bahagian');
+                    console.log(xhr.responseText);
+                }
             });
         });
+
+        //PTJ Search
+        $('#searchFormBahagian').on('submit', function(e) {
+            e.preventDefault();
+            performSearch();
+        });
+
+        $('#search').on('keyup', function() {
+            performSearch();
+        });
+
+        function performSearch() {
+            let searchQuery = $('#search').val();
+            let ptjId = {{ $ptj->id }}; // Make sure to pass the PTJ ID from the controller
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('bahagian.search') }}',
+                data: {
+                    search: searchQuery,
+                    ptj_id: ptjId
+                },
+                success: function(response) {
+                    let tableBody = $('tbody');
+                    tableBody.empty();
+
+                    if (response.data.length > 0) {
+                        response.data.forEach(function(bahagian) {
+                            let row = `<tr>
+                        <td>${bahagian.bahagian}</td>
+                        <td>
+                            <ul class="list-unstyled mb-0">
+                                ${bahagian.units.map(unit => `<li>${unit.unit}</li>`).join('')}
+                            </ul>
+                        </td>
+                        <td style="width: 1px; white-space: nowrap;">
+                            <a href="javascript:void(0)" onclick="editBahagian(${bahagian.id})" class="btn btn-primary btn-sm">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <a href="javascript:void(0)" onclick="deleteBahagian(${bahagian.id})" class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>`;
+                            tableBody.append(row);
+                        });
+                    } else {
+                        tableBody.append('<tr><td colspan="3" class="text-center">No results found</td></tr>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Search error:', error);
+                    alert('An error occurred while searching. Please try again.');
+                }
+            });
+        }
     </script>
 @endpush

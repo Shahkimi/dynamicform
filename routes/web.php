@@ -54,3 +54,4 @@ Route::post('/bahagian', [TestController::class, 'storeBahagian'])->name('bahagi
 Route::delete('/bahagian/{id}', [TestController::class, 'destroyBahagian'])->name('bahagian.destroy');
 Route::get('/bahagian/{id}/edit', [TestController::class, 'editBahagian'])->name('test.bahagian.edit');
 Route::put('/bahagian/{id}', [TestController::class, 'updateBahagian'])->name('test.bahagian.update');
+Route::get('/bahagian/search', [TestController::class, 'searchBahagian'])->name('bahagian.search');

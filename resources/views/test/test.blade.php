@@ -286,7 +286,7 @@
 
 @push('scripts')
     <script>
-        // Step-by-step form and save data
+        // Multi-step form and save data
         document.addEventListener('DOMContentLoaded', function() {
             var modals = [
                 new bootstrap.Modal(document.getElementById('step1Modal')),

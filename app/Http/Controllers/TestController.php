@@ -202,6 +202,7 @@ class TestController extends Controller
         return response()->json($ptj);
     }
 
+    //Ptj Update
     public function update(Request $request, $id)
     {
         \Log::info('Update request received:', $request->all());
@@ -227,21 +228,42 @@ class TestController extends Controller
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
     }
+
+    //Ptj Search
     public function search(Request $request)
-{
-    \Log::info('Search request received:', $request->all());
+    {
+        \Log::info('Search request received:', $request->all());
 
-    $search = $request->input('search');
-    \Log::info('Search term:', ['search' => $search]);
+        $search = $request->input('search');
+        \Log::info('Search term:', ['search' => $search]);
 
-    $ptjs = Ptj::where(function ($query) use ($search) {
-        $query->where('nama_ptj', 'like', "%$search%")
-            ->orWhere('kod_ptj', 'like', "%$search%")
-            ->orWhere('alamat', 'like', "%$search%");
-    })->get();
+        $ptjs = Ptj::where(function ($query) use ($search) {
+            $query->where('nama_ptj', 'like', "%$search%")
+                ->orWhere('kod_ptj', 'like', "%$search%")
+                ->orWhere('alamat', 'like', "%$search%");
+        })->get();
 
-    \Log::info('Search results:', ['count' => $ptjs->count(), 'results' => $ptjs->toArray()]);
+        \Log::info('Search results:', ['count' => $ptjs->count(), 'results' => $ptjs->toArray()]);
 
-    return response()->json(['data' => $ptjs]);
-}
+        return response()->json(['data' => $ptjs]);
+    }
+
+    //Bahagian Search
+    public function searchBahagian(Request $request)
+    {
+        $search = $request->input('search');
+        $ptjId = $request->input('ptj_id');
+
+        $bahagians = Bahagian::where('ptj_id', $ptjId)
+            ->where(function ($query) use ($search) {
+                $query->where('bahagian', 'like', "%$search%")
+                    ->orWhereHas('units', function ($unitQuery) use ($search) {
+                        $unitQuery->where('unit', 'like', "%$search%");
+                    });
+            })
+            ->with('units')
+            ->get();
+
+        return response()->json(['data' => $bahagians]);
+    }
 }
