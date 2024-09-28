@@ -5,7 +5,17 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Multi-step Form</div>
+                    <div class="card-header">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb pt-2 pb-0">
+                                <!-- Add padding to the top and reduce padding at the bottom -->
+                                <li class="breadcrumb-item"><a href="{{ route('test.index') }}">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"> Bahagian & Unit</li>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+
                     <div class="card-body">
                         <div class="container mt-4">
                             <div class="row">
@@ -64,11 +74,7 @@
                                                     @endforeach
                                                 </tbody>
                                             </table>
-
-                                            <!-- Updated Pagination -->
-                                            <div class="d-flex justify-content-center mt-4">
-                                                {{ $bahagians->links('pagination::bootstrap-5') }}
-                                            </div>
+                                            {!! $bahagians->links('pagination::bootstrap-5') !!}
                                         </div>
                                     </div>
                                 </div>
