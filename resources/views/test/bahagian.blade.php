@@ -116,7 +116,7 @@
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <label for="units" class="form-label">Nama Unit</label>
                                     <button type="button" class="btn btn-success btn-sm" id="addUnitBtn"><i
-                                            class="fa fa-plus-circle" aria-hidden="true"></i> Add Unit</button>
+                                            class="fa fa-plus-circle" aria-hidden="true"></i> Tambah Unit</button>
                                 </div>
                                 <div id="unitContainer">
                                     <div class="input-group mb-2">
@@ -129,7 +129,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="saveBahagianBtn"><i class="fa fa-floppy-o"
-                                aria-hidden="true"></i> Save Bahagian</button>
+                                aria-hidden="true"></i> Simpan Bahagian</button>
                     </div>
                 </div>
             </div>
@@ -157,7 +157,7 @@
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <label for="edit_units" class="form-label">Units</label>
                                     <button type="button" class="btn btn-success btn-sm" id="editAddUnitBtn"><i
-                                            class="fa fa-plus-circle" aria-hidden="true"></i> Add Unit</button>
+                                            class="fa fa-plus-circle" aria-hidden="true"></i> Tambah Unit</button>
                                 </div>
                                 <div id="editUnitContainer">
                                     <!-- Existing units will be populated here -->
@@ -167,7 +167,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="updateBahagianBtn"><i class="fa fa-floppy-o"
-                                aria-hidden="true"></i> Update Bahagian</button>
+                                aria-hidden="true"></i> Kemaskini Bahagian</button>
                     </div>
                 </div>
             </div>

@@ -200,7 +200,6 @@
     <!-- Form Modal End -->
 
     <!-- View PTJ Modal -->
-    <!-- View PTJ Modal -->
     <div class="modal fade" id="viewPtjModal" tabindex="-1" aria-labelledby="viewPtjModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -210,27 +209,27 @@
                 </div>
                 <div class="modal-body">
                     <dl class="row">
-                        <dt class="col-sm-3">Kod PTJ:</dt>
+                        <dt class="col-sm-3">Kod PTJ</dt>
                         <dd class="col-sm-9">
                             <input class="form-control" type="text" id="viewKodPtj" aria-label="Kod PTJ" disabled
                                 readonly>
                         </dd>
 
-                        <dt class="col-sm-3">Nama PTJ:</dt>
+                        <dt class="col-sm-3">Nama PTJ</dt>
                         <dd class="col-sm-9">
                             <input class="form-control" type="text" id="viewNamaPtj" aria-label="Nama PTJ" disabled
                                 readonly>
                         </dd>
 
-                        <dt class="col-sm-3">Pengarah:</dt>
+                        <dt class="col-sm-3">Pengarah</dt>
                         <dd class="col-sm-9">
-                            <textarea class="form-control" id="viewPengarah" rows="3" aria-label="Pengarah" disabled readonly
+                            <textarea class="form-control" id="viewPengarah" rows="2" aria-label="Pengarah" disabled readonly
                                 style="resize: none;"></textarea>
                         </dd>
 
-                        <dt class="col-sm-3">Alamat:</dt>
+                        <dt class="col-sm-3">Alamat</dt>
                         <dd class="col-sm-9">
-                            <textarea class="form-control" id="viewAlamat" rows="3" aria-label="Alamat" disabled readonly
+                            <textarea class="form-control" id="viewAlamat" rows="5" aria-label="Alamat" disabled readonly
                                 style="resize: none;"></textarea>
                         </dd>
                     </dl>
