@@ -67,8 +67,8 @@ class TestController extends Controller
             $ptj = Ptj::with(['bahagians.units'])->findOrFail($id);
             return response()->json($ptj);
         } catch (\Exception $e) {
-            \Log::error('Error in PTJ show method: ' . $e->getMessage());
-            \Log::error($e->getTraceAsString());
+            Log::error('Error in PTJ show method: ' . $e->getMessage());
+            Log::error($e->getTraceAsString());
             return response()->json(['error' => 'An error occurred while fetching the PTJ data: ' . $e->getMessage()], 500);
         }
     }
@@ -88,7 +88,7 @@ class TestController extends Controller
     public function showBahagian($id)
     {
         $ptj = Ptj::findOrFail($id);
-        $bahagians = $ptj->bahagians()->with('units')->paginate(5);
+        $bahagians = $ptj->bahagians()->with('units')->paginate(6);
         return view('test.bahagian', compact('ptj', 'bahagians'));
     }
 
@@ -205,7 +205,7 @@ class TestController extends Controller
     //Ptj Update
     public function update(Request $request, $id)
     {
-        \Log::info('Update request received:', $request->all());
+        Log::info('Update request received:', $request->all());
 
         $validator = Validator::make($request->all(), [
             'nama_ptj' => 'required|string|max:255',
@@ -215,7 +215,7 @@ class TestController extends Controller
         ]);
 
         if ($validator->fails()) {
-            \Log::error('Validation failed:', $validator->errors()->toArray());
+            Log::error('Validation failed:', $validator->errors()->toArray());
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -224,7 +224,7 @@ class TestController extends Controller
             $ptj->update($request->all());
             return response()->json(['message' => 'PTJ updated successfully!']);
         } catch (\Exception $e) {
-            \Log::error('Error updating PTJ:', ['message' => $e->getMessage()]);
+            Log::error('Error updating PTJ:', ['message' => $e->getMessage()]);
             return response()->json(['errors' => ['general' => [$e->getMessage()]]], 500);
         }
     }
@@ -232,10 +232,10 @@ class TestController extends Controller
     //Ptj Search
     public function search(Request $request)
     {
-        \Log::info('Search request received:', $request->all());
+        Log::info('Search request received:', $request->all());
 
         $search = $request->input('search');
-        \Log::info('Search term:', ['search' => $search]);
+        Log::info('Search term:', ['search' => $search]);
 
         $ptjs = Ptj::where(function ($query) use ($search) {
             $query->where('nama_ptj', 'like', "%$search%")
@@ -243,7 +243,7 @@ class TestController extends Controller
                 ->orWhere('alamat', 'like', "%$search%");
         })->get();
 
-        \Log::info('Search results:', ['count' => $ptjs->count(), 'results' => $ptjs->toArray()]);
+        Log::info('Search results:', ['count' => $ptjs->count(), 'results' => $ptjs->toArray()]);
 
         return response()->json(['data' => $ptjs]);
     }

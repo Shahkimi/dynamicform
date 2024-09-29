@@ -177,78 +177,16 @@
 
 @push('scripts')
     <script>
-        //Edit Function
-        function editBahagian(id) {
-            $.ajax({
-                url: "{{ route('test.bahagian.edit', ':id') }}".replace(':id', id),
-                type: 'GET',
-                success: function(response) {
-                    $('#edit_bahagian_id').val(response.id);
-                    $('#edit_bahagian').val(response.bahagian);
-
-                    // Update form action URL
-                    var action = $('#editBahagianForm').attr('action');
-                    action = action.replace(':id', response.id);
-                    $('#editBahagianForm').attr('action', action);
-
-                    // Clear existing units
-                    $('#editUnitContainer').empty();
-
-                    // Populate units
-                    response.units.forEach(function(unit) {
-                        $('#editUnitContainer').append(`
-                        <div class="input-group mb-2">
-                            <input type="text" class="form-control" name="units[]" value="${unit.unit}" required>
-                            <input type="hidden" name="unit_ids[]" value="${unit.id}">
-                            <button type="button" class="btn btn-danger btn-sm remove-unit">Remove</button>
-                        </div>
-                    `);
-                    });
-
-                    $('#editBahagianModal').modal('show');
-                },
-                error: function(xhr) {
-                    alert('Error fetching Bahagian data');
-                    console.log(xhr.responseText);
-                }
-            });
-        }
-
-        //Delete Function
-        function deleteBahagian(id) {
-            if (confirm('Are you sure you want to delete this bahagian and all its associated units?')) {
-                $.ajax({
-                    url: `/bahagian/${id}`,
-                    type: 'DELETE',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                    },
-                    success: function(response) {
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Error deleting Bahagian');
-                        console.log(xhr.responseText);
-                    }
-                });
-            }
-        }
-
-        //Add Function
-        function addBahagian(ptjId) {
-            $('#addBahagianModal').modal('show');
-        }
-
         $(document).ready(function() {
+            // Add Bahagian
             $('#addUnitBtn, #editAddUnitBtn').on('click', function() {
                 var container = $(this).closest('.modal-body').find('.input-group').parent();
                 container.append(`
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" name="units[]" required>
-                    <button type="button" class="btn btn-danger btn-sm remove-unit">Remove</button>
-                </div>
-            `);
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" name="units[]" required>
+                        <button type="button" class="btn btn-danger btn-sm remove-unit">Remove</button>
+                    </div>
+                `);
             });
 
             $(document).on('click', '.remove-unit', function() {
@@ -263,92 +201,200 @@
                     data: formData,
                     success: function(response) {
                         $('#addBahagianModal').modal('hide');
-                        alert('Bahagian added successfully');
-                        location.reload();
+                        Swal.fire(
+                            'Success!',
+                            'Bahagian added successfully',
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
                     },
                     error: function(xhr) {
-                        alert('Error adding Bahagian');
+                        Swal.fire(
+                            'Error!',
+                            'Error adding Bahagian',
+                            'error'
+                        );
                         console.log(xhr.responseText);
                     }
                 });
             });
-        });
 
-        // Update Bahagian
-        $('#updateBahagianBtn').on('click', function() {
-            var form = $('#editBahagianForm');
-            var formData = form.serialize();
-            var bahagianId = $('#edit_bahagian_id').val();
-            $.ajax({
-                url: form.attr('action').replace(':id', bahagianId),
-                type: 'POST',
-                data: formData,
-                success: function(response) {
-                    $('#editBahagianModal').modal('hide');
-                    alert('Bahagian updated successfully');
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Error updating Bahagian');
-                    console.log(xhr.responseText);
-                }
-            });
-        });
+            // Edit Bahagian
+            function editBahagian(id) {
+                $.ajax({
+                    url: "{{ route('test.bahagian.edit', ':id') }}".replace(':id', id),
+                    type: 'GET',
+                    success: function(response) {
+                        $('#edit_bahagian_id').val(response.id);
+                        $('#edit_bahagian').val(response.bahagian);
 
-        //PTJ Search
-        $('#searchFormBahagian').on('submit', function(e) {
-            e.preventDefault();
-            performSearch();
-        });
+                        var action = $('#editBahagianForm').attr('action');
+                        action = action.replace(':id', response.id);
+                        $('#editBahagianForm').attr('action', action);
 
-        $('#search').on('keyup', function() {
-            performSearch();
-        });
+                        $('#editUnitContainer').empty();
 
-        function performSearch() {
-            let searchQuery = $('#search').val();
-            let ptjId = {{ $ptj->id }}; // Make sure to pass the PTJ ID from the controller
-
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('bahagian.search') }}',
-                data: {
-                    search: searchQuery,
-                    ptj_id: ptjId
-                },
-                success: function(response) {
-                    let tableBody = $('tbody');
-                    tableBody.empty();
-
-                    if (response.data.length > 0) {
-                        response.data.forEach(function(bahagian) {
-                            let row = `<tr>
-                        <td>${bahagian.bahagian}</td>
-                        <td>
-                            <ul class="list-unstyled mb-0">
-                                ${bahagian.units.map(unit => `<li>${unit.unit}</li>`).join('')}
-                            </ul>
-                        </td>
-                        <td style="width: 1px; white-space: nowrap;">
-                            <a href="javascript:void(0)" onclick="editBahagian(${bahagian.id})" class="btn btn-primary btn-sm">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a href="javascript:void(0)" onclick="deleteBahagian(${bahagian.id})" class="btn btn-danger btn-sm">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>`;
-                            tableBody.append(row);
+                        response.units.forEach(function(unit) {
+                            $('#editUnitContainer').append(`
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control" name="units[]" value="${unit.unit}" required>
+                                    <input type="hidden" name="unit_ids[]" value="${unit.id}">
+                                    <button type="button" class="btn btn-danger btn-sm remove-unit">Remove</button>
+                                </div>
+                            `);
                         });
-                    } else {
-                        tableBody.append('<tr><td colspan="3" class="text-center">No results found</td></tr>');
+
+                        $('#editBahagianModal').modal('show');
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Error fetching Bahagian data',
+                            'error'
+                        );
+                        console.log(xhr.responseText);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Search error:', error);
-                    alert('An error occurred while searching. Please try again.');
-                }
+                });
+            }
+
+            // Update Bahagian
+            $('#updateBahagianBtn').on('click', function() {
+                var form = $('#editBahagianForm');
+                var formData = form.serialize();
+                var bahagianId = $('#edit_bahagian_id').val();
+                $.ajax({
+                    url: form.attr('action').replace(':id', bahagianId),
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $('#editBahagianModal').modal('hide');
+                        Swal.fire(
+                            'Success!',
+                            'Bahagian updated successfully',
+                            'success'
+                        ).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire(
+                            'Error!',
+                            'Error updating Bahagian',
+                            'error'
+                        );
+                        console.log(xhr.responseText);
+                    }
+                });
             });
+
+            // Delete Bahagian
+            function deleteBahagian(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `/bahagian/${id}`,
+                            type: 'DELETE',
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                            },
+                            success: function(response) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    response.message,
+                                    'success'
+                                ).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    'Error deleting Bahagian',
+                                    'error'
+                                );
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Search Bahagian
+            $('#searchFormBahagian').on('submit', function(e) {
+                e.preventDefault();
+                performSearch();
+            });
+
+            $('#search').on('keyup', function() {
+                performSearch();
+            });
+
+            function performSearch() {
+                let searchQuery = $('#search').val();
+                let ptjId = {{ $ptj->id }};
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('bahagian.search') }}',
+                    data: {
+                        search: searchQuery,
+                        ptj_id: ptjId
+                    },
+                    success: function(response) {
+                        let tableBody = $('tbody');
+                        tableBody.empty();
+
+                        if (response.data.length > 0) {
+                            response.data.forEach(function(bahagian) {
+                                let row = `<tr>
+                                    <td>${bahagian.bahagian}</td>
+                                    <td>
+                                        <ul class="list-unstyled mb-0">
+                                            ${bahagian.units.map(unit => `<li>${unit.unit}</li>`).join('')}
+                                        </ul>
+                                    </td>
+                                    <td style="width: 1px; white-space: nowrap;">
+                                        <a href="javascript:void(0)" onclick="editBahagian(${bahagian.id})" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a href="javascript:void(0)" onclick="deleteBahagian(${bahagian.id})" class="btn btn-danger btn-sm">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>`;
+                                tableBody.append(row);
+                            });
+                        } else {
+                            tableBody.append('<tr><td colspan="3" class="text-center">No results found</td></tr>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Search error:', error);
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while searching. Please try again.',
+                            'error'
+                        );
+                    }
+                });
+            }
+
+            // Make functions globally accessible
+            window.editBahagian = editBahagian;
+            window.deleteBahagian = deleteBahagian;
+        });
+
+        function addBahagian(ptjId) {
+            $('#addBahagianModal').modal('show');
         }
     </script>
 @endpush

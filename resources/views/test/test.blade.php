@@ -297,8 +297,7 @@
                 button.addEventListener('click', function() {
                     var currentModal = bootstrap.Modal.getInstance(this.closest('.modal'));
                     var targetModalId = this.getAttribute('data-bs-target');
-                    var targetModal = bootstrap.Modal.getInstance(document.querySelector(
-                        targetModalId));
+                    var targetModal = bootstrap.Modal.getInstance(document.querySelector(targetModalId));
 
                     currentModal.hide();
                     targetModal.show();
@@ -339,27 +338,37 @@
                         body: new FormData(this),
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                         }
                     })
                     .then(response => response.json())
                     .then(data => {
                         modals[2].hide();
-                        alert(data.message);
-                        window.location.reload();
+                        Swal.fire({
+                            title: 'Success!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('An error occurred. Please try again.');
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     });
             });
 
-            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener(
-                'click',
-                function() {
-                    modals[0].show();
-                });
+            document.querySelector('[data-bs-toggle="modal"][data-bs-target="#step1Modal"]').addEventListener('click', function() {
+                modals[0].show();
+            });
         });
 
         // PTJ View
@@ -367,7 +376,12 @@
             console.log('Viewing PTJ with id:', id);
             if (id === undefined || id === null) {
                 console.error('Invalid PTJ id');
-                alert('An error occurred: Invalid PTJ id');
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred: Invalid PTJ id',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
@@ -392,46 +406,66 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while fetching the data. Check the console for more details.');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while fetching the data. Check the console for more details.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 });
         }
 
         // PTJ Delete
         function deleteFunc(id) {
-            if (confirm(
-                    "Are you sure you want to delete this PTJ? This action cannot be undone and will also delete all related Bahagian and Unit records."
-                )) {
-                fetch(`/ptj/${id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        },
-                    })
-                    .then(response => {
-                        if (response.status === 419) { // CSRF token mismatch
-                            alert('Your session has expired. Please refresh the page and try again.');
-                            return;
-                        }
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        alert(data.message);
-                        location.reload(); // Reload the page to reflect the changes
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while deleting the PTJ.');
-                    });
-            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this! All related Bahagian and Unit records will also be deleted.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/ptj/${id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                        })
+                        .then(response => {
+                            if (response.status === 419) {
+                                throw new Error('Your session has expired. Please refresh the page and try again.');
+                            }
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            Swal.fire(
+                                'Deleted!',
+                                data.message,
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire(
+                                'Error!',
+                                error.message || 'An error occurred while deleting the PTJ.',
+                                'error'
+                            );
+                        });
+                }
+            });
         }
 
         function bahagianFunc(id) {
-            // Redirect to the bahagian page with the PTJ id
             window.location.href = `/ptj/${id}/bahagian`;
         }
 
@@ -451,7 +485,12 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while fetching the PTJ data.');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while fetching the PTJ data.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 });
         }
 
@@ -469,8 +508,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                            'content')
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify(plainFormData)
                 })
@@ -482,17 +520,33 @@
                         for (let field in data.errors) {
                             errorMessage += `${field}: ${data.errors[field].join(', ')}\n`;
                         }
-                        alert(errorMessage);
+                        Swal.fire({
+                            title: 'Validation Error!',
+                            text: errorMessage,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     } else {
                         let editPtjModal = bootstrap.Modal.getInstance(document.getElementById('editPtjModal'));
                         editPtjModal.hide();
-                        alert(data.message);
-                        window.location.reload();
+                        Swal.fire({
+                            title: 'Success!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred while updating the PTJ.');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while updating the PTJ.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 });
         });
 
@@ -552,9 +606,12 @@
                 error: function(xhr, status, error) {
                     console.error('Search error:', error);
                     console.log('XHR:', xhr);
-                    alert(
-                        'An error occurred while searching. Please check the console for more details.'
-                    );
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An error occurred while searching. Please check the console for more details.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         });
